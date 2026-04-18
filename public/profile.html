@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEO Profile Setup</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero hero-banner section">
+        <div>
+          <p class="eyebrow">NEO Profile Setup</p>
+          <h1>Tell us a bit about your study path</h1>
+          <p class="subtext">This helps NeoDesk personalize your topics and AI search.</p>
+        </div>
+        <div class="header-actions">
+          <button class="back-button" id="back-button" type="button">Back</button>
+          <button class="logout-button" id="logout-button" type="button">Logout</button>
+        </div>
+      </header>
+
+      <section class="section grid">
+        <div class="card">
+          <h2>Profile details</h2>
+          <form id="profile-form">
+            <label>
+              Username
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              Education level
+              <select name="educationLevel" id="education-level" required>
+                <option value="">Select level</option>
+                <option value="School">School</option>
+                <option value="Diploma">Diploma</option>
+                <option value="Engineering">Engineering</option>
+              </select>
+            </label>
+            <label>
+              College name
+              <input type="text" name="collegeName" list="college-suggestions" required />
+            </label>
+            <datalist id="college-suggestions">
+              <option value="IIT Bombay"></option>
+              <option value="IIT Delhi"></option>
+              <option value="IIT Madras"></option>
+              <option value="NIT Trichy"></option>
+              <option value="BITS Pilani"></option>
+              <option value="VIT Vellore"></option>
+              <option value="MIT Manipal"></option>
+            </datalist>
+            <div id="level-specific-fields"></div>
+            <button type="submit">Save profile ✅</button>
+            <p class="form-note" id="profile-message"></p>
+          </form>
+        </div>
+
+        <div class="card neodesk-card">
+          <h2 class="neodesk-title">🎥 NeoDesk in Action</h2>
+          <div class="neodesk-log">
+            <div class="neodesk-line" id="neo-line-1"></div>
+            <div class="neodesk-line" id="neo-line-2"></div>
+            <div class="neodesk-line" id="neo-line-3"></div>
+            <div class="neodesk-line" id="neo-line-4"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="profile.js"></script>
+  </body>
+</html>

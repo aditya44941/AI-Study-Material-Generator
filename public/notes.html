@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoDesk Notes</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page notes-page">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebar-toggle" type="button">☰</button>
+          <div class="brand">NeoDesk</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="back-button" id="back-button" type="button">Back to Material</button>
+        </div>
+      </div>
+
+      <section class="section material-header">
+        <h1 id="notes-title">Notes: —</h1>
+        <p id="notes-subtitle">Detailed study guide</p>
+      </section>
+
+      <section class="section material-loading" id="notes-loading">
+        <div class="loading-card">
+          <div class="loading-title">Building detailed notes...</div>
+          <div class="loading-spinner"></div>
+        </div>
+      </section>
+
+      <section class="section ai-output-section hidden" id="notes-output">
+        <div class="output-card">
+          <div class="section-hero">
+            <div>
+              <div class="section-hero-title">📚 Full Study Notes</div>
+              <div class="section-hero-sub">From fundamentals to advanced topics.</div>
+            </div>
+            <a class="section-hero-link" id="notes-ref" target="_blank">Open Reference</a>
+          </div>
+          <div class="notes-long" id="notes-long"></div>
+        </div>
+
+        <div class="output-card">
+          <div class="section-hero">
+            <div>
+              <div class="section-hero-title">🧩 Figures & Diagrams</div>
+              <div class="section-hero-sub">Fetched live for visual learning.</div>
+            </div>
+            <a class="section-hero-link" id="notes-figures" target="_blank">Open Figures</a>
+          </div>
+          <div class="figure-grid" id="notes-figure-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="notes.js"></script>
+  </body>
+</html>

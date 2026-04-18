@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEO Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="neo-sidebar" id="neo-sidebar">
+      <div class="sidebar-brand">NEO</div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="/dashboard.html">
+          <span class="icon">🏠</span>
+          <span class="label">Dashboard</span>
+        </a>
+        <a class="sidebar-link" href="/profile.html">
+          <span class="icon">👤</span>
+          <span class="label">Profile</span>
+        </a>
+        <a class="sidebar-link" href="#generator-page">
+          <span class="icon">🤖</span>
+          <span class="label">AI Search</span>
+        </a>
+        <a class="sidebar-link" href="#topic-section">
+          <span class="icon">✨</span>
+          <span class="label">Topics</span>
+        </a>
+        <a class="sidebar-link" href="#practice-section">
+          <span class="icon">🧪</span>
+          <span class="label">Practice</span>
+        </a>
+        <button class="sidebar-link logout" id="sidebar-logout" type="button">
+          <span class="icon">🚪</span>
+          <span class="label">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="page with-sidebar">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebar-toggle" type="button">☰</button>
+          <div class="brand">NeoDesk</div>
+        </div>
+        <div class="topbar-actions">
+          <span class="topbar-pill">AI Study</span>
+        </div>
+      </div>
+      <div class="breadcrumb">Home &gt; Dashboard &gt; AI Generator</div>
+
+      <section class="section stats-section" id="stats-section">
+        <div class="stats-header">
+          <h2>📊 Your Learning Stats</h2>
+        </div>
+        <div class="stats-grid" id="stats-grid">
+          <div class="stats-card">
+            <div class="stats-title">Overall Progress</div>
+            <div class="stats-value" id="overall-progress">0%</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="overall-bar"></div>
+            </div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-title">Learning Streak</div>
+            <div class="stats-value"><span id="learning-streak">0</span> days</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-title">Topics Completed</div>
+            <div class="stats-value" id="topics-completed">0</div>
+          </div>
+          <div class="stats-card">
+            <div class="stats-title">Practice Done</div>
+            <div class="stats-value"><span id="practice-done">0</span> questions</div>
+          </div>
+        </div>
+      </section>
+      <header class="hero hero-banner section" id="dashboard-hero">
+        <div>
+          <p class="eyebrow">NEO Study Companion</p>
+          <h1>Generate personalized study material in seconds</h1>
+          <p class="subtext">
+            Auto-generate summaries, notes, and quizzes tailored to your education level and semester.
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="hero-title">What you get</p>
+          <ul class="hero-list">
+            <li>Auto summaries and key notes</li>
+            <li>Personalized to your level</li>
+            <li>Instant practice questions</li>
+          </ul>
+        </div>
+        <div class="header-actions">
+          <button class="back-button" id="back-button" type="button">Back</button>
+          <button class="logout-button" id="logout-button" type="button">Logout</button>
+        </div>
+      </header>
+
+      <section class="section generator-page" id="generator-page">
+        <div class="card search-card">
+          <h2>🤖 AI Study Generator</h2>
+          <p class="search-subtitle">Generate personalized notes, quizzes, and PYQs instantly</p>
+          <form id="generate-form">
+            <label>
+              Subject
+              <input type="text" name="subject" placeholder="Data Structures" required />
+            </label>
+            <label>
+              Topic
+              <input type="text" name="topic" placeholder="Linked Lists" required />
+            </label>
+            <label>
+              Level
+              <input type="text" name="level" placeholder="Beginner" required />
+            </label>
+            <button type="submit">Generate ✍️</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section topic-section" id="topic-section">
+        <div class="topic-header">
+          <h2>Recommended for You</h2>
+          <p class="topic-subtitle" id="topic-level"></p>
+        </div>
+        <p class="topic-hint">Recommended based on your level and stream</p>
+        <div class="topic-scroller" id="topic-scroller"></div>
+      </section>
+
+      <section class="section practice-section" id="practice-section">
+        <div class="practice-header">
+          <h2>🧪 Practice Zone</h2>
+          <p class="practice-subtitle">Track your learning progress</p>
+        </div>
+        <div class="practice-grid" id="practice-grid"></div>
+      </section>
+
+      <div class="toast" id="toast"></div>
+
+      <section class="section results" id="results">
+        <div class="ai-output-section" id="ai-output-section">
+          <div class="ai-topic-header">
+            <div class="ai-topic-title">📘 Topic: <span id="topic-name">—</span></div>
+            <div class="ai-topic-subtitle">Level: <span id="topic-level-output">—</span></div>
+            <div class="ai-actions">
+              <button class="action-btn" id="download-pdf-btn" type="button">Download PDF</button>
+            </div>
+          </div>
+
+          <div class="ai-loading" id="ai-loading">
+            🤖 AI is generating your study material
+            <span class="dots"><span></span><span></span><span></span></span>
+          </div>
+
+          <div class="output-container hidden" id="output-container">
+            <div class="output-card" style="animation-delay: 0.05s;">
+              <div class="card-title">🧠 Smart Summary</div>
+              <ul class="card-list" id="summary-list"></ul>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.1s;">
+              <div class="card-title">📖 Explanation</div>
+              <div class="card-text" id="explanation-text"></div>
+              <div class="action-row">
+                <button class="action-btn" id="simpler-btn" type="button">Explain Simpler</button>
+                <button class="action-btn" id="advanced-btn" type="button">Make it Advanced</button>
+              </div>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.15s;">
+              <div class="card-title">🌍 Real-Life Connection</div>
+              <div class="card-text" id="real-life-text"></div>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.2s;">
+              <div class="card-title">🧪 Quick Quiz</div>
+              <ol class="card-list" id="quiz-list"></ol>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.25s;">
+              <div class="card-title">📄 Previous Year Questions</div>
+              <ul class="card-list" id="pyq-list"></ul>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.3s;">
+              <div class="card-title">📌 Key Points</div>
+              <ul class="card-list" id="keypoints-list"></ul>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.35s;">
+              <div class="card-title">🃏 Flashcards</div>
+              <ul class="card-list" id="flashcards-list"></ul>
+            </div>
+
+            <div class="output-card" style="animation-delay: 0.4s;">
+              <div class="card-title">🗓️ Study Plan</div>
+              <ol class="card-list" id="plan-list"></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

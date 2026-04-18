@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeoDesk Material</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="neo-sidebar" id="neo-sidebar">
+      <div class="sidebar-brand">NEO</div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="/dashboard.html">
+          <span class="icon">🏠</span>
+          <span class="label">Dashboard</span>
+        </a>
+        <a class="sidebar-link" href="/profile.html">
+          <span class="icon">👤</span>
+          <span class="label">Profile</span>
+        </a>
+        <a class="sidebar-link" href="/dashboard.html#ai-search">
+          <span class="icon">🤖</span>
+          <span class="label">AI Search</span>
+        </a>
+        <a class="sidebar-link" href="/dashboard.html#recommended-topics">
+          <span class="icon">✨</span>
+          <span class="label">Topics</span>
+        </a>
+        <a class="sidebar-link" href="/dashboard.html#practice-zone">
+          <span class="icon">🧪</span>
+          <span class="label">Practice</span>
+        </a>
+        <button class="sidebar-link logout" id="sidebar-logout" type="button">
+          <span class="icon">🚪</span>
+          <span class="label">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="page material-page with-sidebar">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebar-toggle" type="button">☰</button>
+          <div class="brand">NeoDesk</div>
+        </div>
+        <div class="topbar-search">
+          <input class="topbar-search-input" type="text" placeholder="Search" />
+        </div>
+        <div class="topbar-actions">
+          <button class="back-button" id="back-button" type="button">Back to Dashboard</button>
+        </div>
+      </div>
+
+      <section class="section material-header">
+        <h1 id="material-title">Topic: —</h1>
+        <p id="material-subtitle">Level: —</p>
+      </section>
+
+      <div class="material-layout">
+        <div class="material-main">
+          <section class="section material-loading" id="material-loading">
+            <div class="loading-card">
+              <div class="loading-title">Generating AI content...</div>
+              <div class="loading-spinner"></div>
+              <div class="loading-hint" id="loading-hint">Preparing your personalized study plan.</div>
+            </div>
+          </section>
+
+          <section class="section ai-output-section hidden" id="material-output">
+            <div class="output-container">
+              <div class="output-card">
+                <div class="section-hero">
+                  <div>
+                    <div class="section-hero-title">📘 Notes</div>
+                    <div class="section-hero-sub">Fast, structured mastery of the core ideas.</div>
+                  </div>
+                  <div class="section-hero-actions">
+                    <a class="section-hero-link" id="notes-link" target="_blank">Open Reference</a>
+                    <button class="section-hero-link outline" id="notes-more" type="button">More</button>
+                  </div>
+                </div>
+                <div class="card-text" id="notes-cheat"></div>
+                <ul class="card-list" id="notes-core"></ul>
+                <ul class="card-list" id="notes-advanced"></ul>
+                <ul class="card-list" id="notes-formulas"></ul>
+              </div>
+
+              <div class="output-card">
+                <div class="section-hero">
+                  <div>
+                    <div class="section-hero-title">🧩 Diagrams & Figures</div>
+                    <div class="section-hero-sub">Real figures fetched live for this topic.</div>
+                  </div>
+                  <a class="section-hero-link" id="figures-link" target="_blank">Open Figures</a>
+                </div>
+                <div class="figure-grid" id="figure-grid"></div>
+              </div>
+
+              <div class="output-card">
+                <div class="section-hero">
+                  <div>
+                    <div class="section-hero-title">📄 Study Materials</div>
+                    <div class="section-hero-sub">Hand‑picked sources to deepen your understanding.</div>
+                  </div>
+                  <a class="section-hero-link" id="materials-link" target="_blank">Browse Sources</a>
+                </div>
+                <ul class="card-list" id="resources-list"></ul>
+              </div>
+
+              <div class="output-card">
+                <div class="section-hero">
+                  <div>
+                    <div class="section-hero-title">🎥 Videos</div>
+                    <div class="section-hero-sub">Watch top explanations and walkthroughs.</div>
+                  </div>
+                  <a class="section-hero-link" id="videos-link" target="_blank">Watch Now</a>
+                </div>
+                <div class="video-grid" id="videos-list"></div>
+              </div>
+
+              <div class="output-card">
+                <div class="section-hero">
+                  <div>
+                    <div class="section-hero-title">🧠 Quiz</div>
+                    <div class="section-hero-sub">Check understanding with quick questions.</div>
+                  </div>
+                  <a class="section-hero-link" id="quiz-link" target="_blank">Practice More</a>
+                </div>
+                <div id="quiz-list"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="material-right"></aside>
+      </div>
+    </main>
+
+    <div class="chat-widget chat-open" id="chat-widget">
+      <div class="chat-widget-header">
+        <div class="chat-widget-title">CHAT WITH US</div>
+        <div class="chat-widget-actions">
+          <button class="chat-icon-btn" id="chat-refresh" type="button">↻</button>
+          <button class="chat-icon-btn" id="chat-minimize" type="button">—</button>
+        </div>
+      </div>
+      <div class="chat-widget-body">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-bubble bot">Hi! Welcome to NeoDesk.</div>
+          <div class="chat-bubble bot">How can I help you?</div>
+        </div>
+      </div>
+      <form class="chat-input-row" id="chat-form">
+        <input class="chat-input" id="chat-input" type="text" placeholder="Write here…" />
+        <button class="chat-send" type="submit">Send</button>
+      </form>
+    </div>
+
+    <button class="chat-fab" id="chat-fab" type="button">💬</button>
+
+    <script src="material.js"></script>
+  </body>
+</html>

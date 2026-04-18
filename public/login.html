@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEO Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="auth-screen">
+        <div class="auth-shell">
+          <div class="auth-copy">
+            <p class="eyebrow">NEO</p>
+            <h1>Study smarter with NEO-made notes ✨</h1>
+            <p class="subtext">
+              Sign in to generate summaries, key notes, and quizzes tailored to your level.
+            </p>
+            <div class="helper-card">
+              <p class="hero-title">Password tip 🔒</p>
+              <p class="helper-text">
+                Use at least 8 characters, a mix of letters, numbers, and a symbol. The bar on the right will
+                show strength as you type.
+              </p>
+            </div>
+          </div>
+
+          <div class="auth-panel">
+            <div class="auth-tabs">
+              <button class="auth-tab is-active" data-tab="login" type="button">Login</button>
+              <button class="auth-tab" data-tab="signup" type="button">Sign up</button>
+            </div>
+
+            <div class="auth-forms">
+              <form id="login-form" class="auth-form is-active" data-panel="login">
+                <h2>Login 🔑</h2>
+                <label>
+                  Email
+                  <input type="email" name="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Password
+                  <input type="password" name="password" placeholder="Your password" required />
+                </label>
+                <button type="submit">Continue</button>
+                <p class="form-note" id="login-message"></p>
+              </form>
+
+              <form id="signup-form" class="auth-form" data-panel="signup">
+                <h2>Create account 🚀</h2>
+                <label>
+                  Email
+                  <input type="email" name="email" placeholder="you@example.com" required />
+                </label>
+                <label>
+                  Password
+                  <input type="password" name="password" id="signup-password" placeholder="Create a password" required />
+                </label>
+                <div class="password-meter" aria-live="polite">
+                  <div class="meter-track">
+                    <div class="meter-fill" id="password-meter"></div>
+                  </div>
+                  <p class="meter-text" id="password-hint">Start typing to see password strength.</p>
+                </div>
+                <button type="submit">Create account</button>
+                <p class="form-note" id="signup-message"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="login.js"></script>
+  </body>
+</html>
