@@ -26,6 +26,24 @@ app.get("/", (_req, res) => {
   return res.sendFile(path.join(publicDir, "index.html"));
 });
 
+function getDbErrorMessage(err) {
+  const code = err?.code || "";
+
+  if (code === "ER_ACCESS_DENIED_ERROR") {
+    return "Database login failed. Check DB user and password in Vercel.";
+  }
+
+  if (code === "ER_BAD_DB_ERROR") {
+    return "Database not found. Check DB_NAME in Vercel.";
+  }
+
+  if (code === "ECONNREFUSED" || code === "ETIMEDOUT" || code === "ENOTFOUND") {
+    return "Database connection failed. Use a hosted MySQL database and check Vercel env vars.";
+  }
+
+  return "Server error";
+}
+
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
@@ -59,7 +77,7 @@ app.post("/api/signup", async (req, res) => {
     return res.status(201).json({ message: "Signup successful", userId: result.insertId });
   } catch (err) {
     console.error("Signup error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: getDbErrorMessage(err) });
   }
 });
 
@@ -82,7 +100,7 @@ app.post("/api/login", async (req, res) => {
     return res.json({ token });
   } catch (err) {
     console.error("Login error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: getDbErrorMessage(err) });
   }
 });
 
@@ -106,7 +124,7 @@ app.post("/api/profile", authMiddleware, async (req, res) => {
     return res.json({ message: "Profile saved" });
   } catch (err) {
     console.error("Profile error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: getDbErrorMessage(err) });
   }
 });
 
@@ -131,7 +149,7 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.error("Profile fetch error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: getDbErrorMessage(err) });
   }
 });
 
