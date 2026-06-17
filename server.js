@@ -19,7 +19,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "3mb" }));
 app.use(express.static(publicDir));
 
 app.get("/", (_req, res) => {
@@ -56,6 +56,38 @@ function authMiddleware(req, res, next) {
     return next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
+  }
+}
+
+async function ensureStatsTable() {
+  await pool.query(
+    `CREATE TABLE IF NOT EXISTS user_stats (
+      user_id INT PRIMARY KEY,
+      overall_progress INT DEFAULT 0,
+      streak_days INT DEFAULT 0,
+      topics_completed INT DEFAULT 0,
+      questions_solved INT DEFAULT 0,
+      last_active DATE DEFAULT (CURRENT_DATE),
+      practice_state JSON,
+      CONSTRAINT fk_user_stats_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )`
+  );
+}
+
+async function ensureProfileOptions() {
+  const columns = [
+    ["avatar_url", "MEDIUMTEXT"],
+    ["study_goal", "VARCHAR(120)"],
+    ["learning_style", "VARCHAR(80)"],
+    ["daily_target", "VARCHAR(80)"]
+  ];
+
+  for (const [name, type] of columns) {
+    try {
+      await pool.query(`ALTER TABLE profiles ADD COLUMN ${name} ${type}`);
+    } catch (err) {
+      if (err?.code !== "ER_DUP_FIELDNAME") throw err;
+    }
   }
 }
 
@@ -105,21 +137,49 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.post("/api/profile", authMiddleware, async (req, res) => {
-  const { username, collegeName, branch, semester, educationLevel } = req.body;
+  const {
+    username,
+    collegeName,
+    branch,
+    semester,
+    educationLevel,
+    avatarUrl,
+    studyGoal,
+    learningStyle,
+    dailyTarget
+  } = req.body;
   if (!username || !collegeName || !branch || !semester || !educationLevel) {
     return res.status(400).json({ message: "All profile fields are required" });
   }
   try {
+    await ensureProfileOptions();
     await pool.query(
-      `INSERT INTO profiles (user_id, username, college_name, branch, semester, education_level)
-       VALUES (?, ?, ?, ?, ?, ?)
+      `INSERT INTO profiles
+         (user_id, username, college_name, branch, semester, education_level, avatar_url, study_goal, learning_style, daily_target)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON DUPLICATE KEY UPDATE
          username = VALUES(username),
          college_name = VALUES(college_name),
          branch = VALUES(branch),
          semester = VALUES(semester),
-         education_level = VALUES(education_level)`
-    , [req.user.id, username, collegeName, branch, semester, educationLevel]);
+         education_level = VALUES(education_level),
+         avatar_url = VALUES(avatar_url),
+         study_goal = VALUES(study_goal),
+         learning_style = VALUES(learning_style),
+         daily_target = VALUES(daily_target)`,
+      [
+        req.user.id,
+        username,
+        collegeName,
+        branch,
+        semester,
+        educationLevel,
+        avatarUrl || null,
+        studyGoal || null,
+        learningStyle || null,
+        dailyTarget || null
+      ]
+    );
 
     return res.json({ message: "Profile saved" });
   } catch (err) {
@@ -130,8 +190,13 @@ app.post("/api/profile", authMiddleware, async (req, res) => {
 
 app.get("/api/profile", authMiddleware, async (req, res) => {
   try {
+    await ensureProfileOptions();
     const [rows] = await pool.query(
-      "SELECT username, college_name, branch, semester, education_level FROM profiles WHERE user_id = ?",
+      `SELECT p.username, p.college_name, p.branch, p.semester, p.education_level,
+              p.avatar_url, p.study_goal, p.learning_style, p.daily_target, u.email
+       FROM profiles p
+       JOIN users u ON u.id = p.user_id
+       WHERE p.user_id = ?`,
       [req.user.id]
     );
     if (rows.length === 0) {
@@ -144,7 +209,12 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
         collegeName: row.college_name,
         branch: row.branch,
         semester: row.semester,
-        educationLevel: row.education_level
+        educationLevel: row.education_level,
+        avatarUrl: row.avatar_url,
+        studyGoal: row.study_goal,
+        learningStyle: row.learning_style,
+        dailyTarget: row.daily_target,
+        email: row.email
       }
     });
   } catch (err) {
@@ -467,6 +537,84 @@ app.post("/chat", authMiddleware, async (req, res) => {
     } catch {
       return res.json({ reply: buildFallbackReply("") });
     }
+  }
+});
+
+
+app.get("/api/stats", authMiddleware, async (req, res) => {
+  try {
+    await ensureStatsTable();
+    const [rows] = await pool.query("SELECT * FROM user_stats WHERE user_id = ?", [req.user.id]);
+
+    if (rows.length === 0) {
+      return res.json({
+        stats: {
+          overallProgress: 0,
+          streakDays: 0,
+          topicsCompleted: 0,
+          questionsSolved: 0,
+          practiceTopics: []
+        }
+      });
+    }
+
+    const row = rows[0];
+    const practiceTopics = row.practice_state ? JSON.parse(row.practice_state) : [];
+    const lastActive = row.last_active ? new Date(row.last_active) : new Date();
+    const today = new Date();
+    const diffDays = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+    let streak = row.streak_days || 0;
+
+    if (diffDays > 1) {
+      streak = 0;
+      await pool.query("UPDATE user_stats SET streak_days = 0 WHERE user_id = ?", [req.user.id]);
+    }
+
+    return res.json({
+      stats: {
+        overallProgress: row.overall_progress || 0,
+        streakDays: streak,
+        topicsCompleted: row.topics_completed || 0,
+        questionsSolved: row.questions_solved || 0,
+        practiceTopics
+      }
+    });
+  } catch (err) {
+    console.error("Stats fetch error:", err);
+    return res.status(500).json({ message: getDbErrorMessage(err) });
+  }
+});
+
+app.post("/api/stats", authMiddleware, async (req, res) => {
+  const { overallProgress, streakDays, topicsCompleted, questionsSolved, practiceTopics } = req.body;
+
+  try {
+    await ensureStatsTable();
+    await pool.query(
+      `INSERT INTO user_stats
+         (user_id, overall_progress, streak_days, topics_completed, questions_solved, last_active, practice_state)
+       VALUES (?, ?, ?, ?, ?, CURRENT_DATE, ?)
+       ON DUPLICATE KEY UPDATE
+         overall_progress = VALUES(overall_progress),
+         streak_days = VALUES(streak_days),
+         topics_completed = VALUES(topics_completed),
+         questions_solved = VALUES(questions_solved),
+         last_active = CURRENT_DATE,
+         practice_state = VALUES(practice_state)`,
+      [
+        req.user.id,
+        overallProgress ?? 0,
+        streakDays ?? 0,
+        topicsCompleted ?? 0,
+        questionsSolved ?? 0,
+        JSON.stringify(practiceTopics ?? [])
+      ]
+    );
+
+    return res.json({ message: "Stats saved" });
+  } catch (err) {
+    console.error("Stats save error:", err);
+    return res.status(500).json({ message: getDbErrorMessage(err) });
   }
 });
 

@@ -14,6 +14,7 @@ const notesRef = document.getElementById("notes-ref");
 const figuresLink = document.getElementById("notes-figures");
 const figureGrid = document.getElementById("notes-figure-grid");
 const backButton = document.getElementById("back-button");
+const forwardButton = document.getElementById("forward-button");
 let profile = {};
 
 if (titleEl) titleEl.textContent = `Notes: ${topic}`;
@@ -26,6 +27,12 @@ if (figuresLink) figuresLink.href = `https://www.google.com/search?tbm=isch&q=${
 if (backButton) {
   backButton.addEventListener("click", () => {
     window.location.href = `/material.html?topic=${encodeURIComponent(topic)}`;
+  });
+}
+
+if (forwardButton) {
+  forwardButton.addEventListener("click", () => {
+    window.location.href = "/dashboard.html";
   });
 }
 

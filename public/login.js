@@ -82,6 +82,7 @@ signupForm.addEventListener("submit", async (e) => {
   showMessage(signupMessage, data.message || "Signup done", res.ok === false);
   if (res.ok) {
     setActiveTab("login");
+    showMessage(loginMessage, "Account created. Login to customize your profile.");
   }
 });
 
@@ -99,7 +100,16 @@ loginForm.addEventListener("submit", async (e) => {
   if (res.ok) {
     localStorage.setItem("authToken", data.token);
     showMessage(loginMessage, "Login successful");
-    window.location.href = "/profile.html";
+
+    try {
+      const profileRes = await fetch("/api/profile", {
+        headers: { Authorization: "Bearer " + data.token }
+      });
+      const profileData = await profileRes.json();
+      window.location.href = profileData.profile ? "/dashboard.html" : "/profile.html";
+    } catch {
+      window.location.href = "/profile.html";
+    }
   } else {
     showMessage(loginMessage, data.message || "Login failed", true);
   }

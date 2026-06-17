@@ -103,6 +103,8 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
+  position: relative;
 }
 
 .topbar-pill {
@@ -112,6 +114,153 @@ body {
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.nav-button {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 9px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav-button.icon-nav {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 3px solid #0f172a;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.55rem;
+  line-height: 1;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.nav-button:hover {
+  border-color: #1f7ae0;
+  color: #1f7ae0;
+}
+
+.nav-button.icon-nav:hover {
+  border-color: #0f172a;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.profile-menu {
+  position: relative;
+}
+
+.profile-trigger {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f7ae0, #11c5a7);
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.profile-avatar.large {
+  width: 58px;
+  height: 58px;
+  font-size: 1.35rem;
+  flex: 0 0 auto;
+}
+
+.profile-avatar.has-photo {
+  color: transparent;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 270px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+}
+
+.profile-dropdown.is-open {
+  display: block;
+}
+
+.profile-summary {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.profile-name {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.profile-batch {
+  margin-top: 3px;
+  color: #f97316;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.profile-status {
+  margin-top: 3px;
+  color: #2563eb;
+  font-size: 0.82rem;
+}
+
+.profile-menu-item {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  text-decoration: none;
+  padding: 13px 16px;
+  border-radius: 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-menu-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: none;
+  box-shadow: none;
+}
+
+.profile-menu-item.danger {
+  color: #dc2626;
 }
 
 .breadcrumb {
@@ -392,6 +541,147 @@ body {
   color: var(--muted);
   font-size: 0.95rem;
   line-height: 1.5;
+}
+
+.account-note {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: start;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.1);
+}
+
+.account-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #1f7ae0, #11c5a7);
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: 800;
+  box-shadow: 0 14px 28px rgba(31, 122, 224, 0.22);
+}
+
+.account-avatar.has-photo {
+  color: transparent;
+}
+
+.account-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.account-copy h2 {
+  font-size: clamp(30px, 3vw, 42px);
+  line-height: 1;
+}
+
+.account-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.account-detail-grid div {
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+}
+
+.account-detail-grid span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.account-detail-grid strong {
+  color: #0f172a;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.account-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-nav {
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  padding: 11px 18px;
+}
+
+.account-nav.primary {
+  background: #1f7ae0;
+  color: #ffffff;
+  border-color: #1f7ae0;
+}
+
+.photo-picker {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.photo-preview {
+  width: 78px;
+  height: 78px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #1f7ae0, #11c5a7);
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.photo-preview.has-photo {
+  color: transparent;
+}
+
+.photo-upload {
+  display: inline-grid;
+  gap: 8px;
+  cursor: pointer;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.photo-upload input {
+  font-size: 0.86rem;
+  padding: 8px;
+}
+
+.small-secondary {
+  width: fit-content;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.12);
 }
 
 .grid {
@@ -910,7 +1200,7 @@ button:hover {
 .topic-scroller {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 290px;
+  grid-auto-columns: 320px;
   gap: 16px;
   overflow-x: auto;
   padding-bottom: 6px;
@@ -926,8 +1216,7 @@ button:hover {
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
   display: grid;
   gap: 10px;
-  min-height: 170px;
-  max-height: 180px;
+  min-height: 210px;
   scroll-snap-align: start;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   opacity: 0;
@@ -947,7 +1236,8 @@ button:hover {
 
 .topic-title {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
+  line-height: 1.25;
 }
 
 .topic-sub {
@@ -1504,4 +1794,108 @@ body.sidebar-open .page.with-sidebar {
   .auth-screen {
     min-height: auto;
   }
+}
+.dashboard-footer {
+  margin-top: 40px; /* Space between the footer and your Practice Zone */
+  padding: 20px;
+  background-color: #f8f9fa; /* Matches your dashboard background */
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  color: #6c757d; /* Softer text color */
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-links a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #007bff; /* Uses your primary action color */
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.brand-title {
+  font-size: 2rem; /* Even larger impact */
+  color: #333;
+  margin-top: 15px; /* Adds space from the copyright text above */
+  letter-spacing: 1.5px;
+  font-weight: 700; /* Makes it bold */
+}
+
+.video-suggestions {
+  margin: 40px 0;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.1);
+}
+
+.video-suggestions h2 {
+  margin-bottom: 6px;
+  font-size: 40px;
+  color: #0f172a;
+}
+
+.video-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+#video-subtitle {
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.video-card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.video-grid iframe {
+  width: 100%;
+  height: 220px;
+  border: 0;
+  display: block;
+  background: #0f172a;
+}
+
+.video-copy {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.video-copy h3 {
+  color: #0f172a;
+  font-size: 1.05rem;
+}
+
+.video-copy p {
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.video-copy a {
+  color: #1f7ae0;
+  font-weight: 700;
+  text-decoration: none;
 }

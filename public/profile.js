@@ -7,8 +7,26 @@ const profileForm = document.getElementById("profile-form");
 const profileMessage = document.getElementById("profile-message");
 const logoutButton = document.getElementById("logout-button");
 const backButton = document.getElementById("back-button");
+const forwardButton = document.getElementById("forward-button");
 const educationLevelSelect = document.getElementById("education-level");
 const levelSpecificFields = document.getElementById("level-specific-fields");
+const accountTitle = document.getElementById("account-title");
+const accountSubtitle = document.getElementById("account-subtitle");
+const accountAvatar = document.getElementById("account-avatar");
+const accountName = document.getElementById("account-name");
+const accountEmail = document.getElementById("account-email");
+const accountCollege = document.getElementById("account-college");
+const accountLevel = document.getElementById("account-level");
+const accountBranch = document.getElementById("account-branch");
+const goDashboardButton = document.getElementById("go-dashboard");
+const goGeneratorButton = document.getElementById("go-generator");
+const avatarFile = document.getElementById("avatar-file");
+const avatarUrlInput = document.getElementById("avatar-url");
+const photoPreview = document.getElementById("photo-preview");
+const removePhotoButton = document.getElementById("remove-photo");
+const accountGoal = document.getElementById("account-goal");
+const accountStyle = document.getElementById("account-style");
+const accountTarget = document.getElementById("account-target");
 
 const neoLine1 = document.getElementById("neo-line-1");
 const neoLine2 = document.getElementById("neo-line-2");
@@ -18,6 +36,88 @@ const neoLine4 = document.getElementById("neo-line-4");
 function showMessage(el, text, isError = false) {
   el.textContent = text;
   el.style.color = isError ? "#f87171" : "#1f7ae0";
+}
+
+function setAvatarPreview(value, fallbackInitial = "N") {
+  const targets = [accountAvatar, photoPreview].filter(Boolean);
+  targets.forEach((target) => {
+    target.innerHTML = "";
+    target.style.backgroundImage = "";
+
+    if (value) {
+      target.style.backgroundImage = `url("${value}")`;
+      target.classList.add("has-photo");
+    } else {
+      target.textContent = fallbackInitial;
+      target.classList.remove("has-photo");
+    }
+  });
+
+  if (avatarUrlInput) avatarUrlInput.value = value || "";
+}
+
+function updateAccountNote(prof) {
+  const username = prof?.username || "Student";
+  const email = prof?.email || "Not available";
+  const college = prof?.collegeName || "Not set";
+  const level = prof?.educationLevel || "Not set";
+  const branch = prof?.branch || "Not set";
+  const semester = prof?.semester || "";
+  const avatarUrl = prof?.avatarUrl || "";
+  const studyGoal = prof?.studyGoal || "Not set";
+  const learningStyle = prof?.learningStyle || "Not set";
+  const dailyTarget = prof?.dailyTarget || "Not set";
+  const initial = username.trim().charAt(0).toUpperCase() || "N";
+
+  if (accountTitle) accountTitle.textContent = `${username}'s account`;
+  if (accountSubtitle) {
+    accountSubtitle.textContent = `${level} profile${semester ? ` • ${semester}` : ""} • personalized NeoDesk access`;
+  }
+  setAvatarPreview(avatarUrl, initial);
+  if (accountName) accountName.textContent = username;
+  if (accountEmail) accountEmail.textContent = email;
+  if (accountCollege) accountCollege.textContent = college;
+  if (accountLevel) accountLevel.textContent = semester ? `${level} - ${semester}` : level;
+  if (accountBranch) accountBranch.textContent = branch;
+  if (accountGoal) accountGoal.textContent = studyGoal;
+  if (accountStyle) accountStyle.textContent = learningStyle;
+  if (accountTarget) accountTarget.textContent = dailyTarget;
+}
+
+if (avatarFile) {
+  avatarFile.addEventListener("change", () => {
+    const file = avatarFile.files && avatarFile.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showMessage(profileMessage, "Please select an image file", true);
+      avatarFile.value = "";
+      return;
+    }
+
+    if (file.size > 750 * 1024) {
+      showMessage(profileMessage, "Image is too large. Choose a photo under 750 KB.", true);
+      avatarFile.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarPreview(reader.result, "N");
+      showMessage(profileMessage, "Photo added. Click Save profile to update it.");
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+if (removePhotoButton) {
+  removePhotoButton.addEventListener("click", () => {
+    const username = profileForm.elements.username.value || "Student";
+    const initial = username.trim().charAt(0).toUpperCase() || "N";
+    setAvatarPreview("", initial);
+    if (avatarFile) avatarFile.value = "";
+    showMessage(profileMessage, "Photo removed. Click Save profile to confirm.");
+  });
 }
 
 function renderLevelFields(level) {
@@ -190,6 +290,20 @@ profileForm.addEventListener("submit", async (e) => {
   const data = await res.json();
   showMessage(profileMessage, data.message || "Profile saved", res.ok === false);
   if (res.ok) {
+    await fetch("/api/stats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        overallProgress: 0,
+        streakDays: 1,
+        topicsCompleted: 0,
+        questionsSolved: 0,
+        practiceTopics: []
+      })
+    }).catch(() => {});
     window.location.href = "/dashboard.html";
   }
 });
@@ -203,7 +317,29 @@ if (logoutButton) {
 
 if (backButton) {
   backButton.addEventListener("click", () => {
-    window.location.href = "/login.html";
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "/dashboard.html";
+    }
+  });
+}
+
+if (forwardButton) {
+  forwardButton.addEventListener("click", () => {
+    window.location.href = "/dashboard.html#generator-page";
+  });
+}
+
+if (goDashboardButton) {
+  goDashboardButton.addEventListener("click", () => {
+    window.location.href = "/dashboard.html";
+  });
+}
+
+if (goGeneratorButton) {
+  goGeneratorButton.addEventListener("click", () => {
+    window.location.href = "/dashboard.html#generator-page";
   });
 }
 
@@ -214,7 +350,21 @@ async function loadExistingProfile() {
     });
     const data = await res.json();
     if (data.profile) {
-      window.location.href = "/dashboard.html";
+      const prof = data.profile;
+      profileForm.elements.username.value = prof.username || "";
+      profileForm.elements.educationLevel.value = prof.educationLevel || "";
+      renderLevelFields(prof.educationLevel || "");
+      profileForm.elements.collegeName.value = prof.collegeName || "";
+      if (profileForm.elements.branch) profileForm.elements.branch.value = prof.branch || "";
+      if (profileForm.elements.semester) profileForm.elements.semester.value = prof.semester || "";
+      if (profileForm.elements.avatarUrl) profileForm.elements.avatarUrl.value = prof.avatarUrl || "";
+      if (profileForm.elements.studyGoal) profileForm.elements.studyGoal.value = prof.studyGoal || "";
+      if (profileForm.elements.learningStyle) profileForm.elements.learningStyle.value = prof.learningStyle || "";
+      if (profileForm.elements.dailyTarget) profileForm.elements.dailyTarget.value = prof.dailyTarget || "";
+      updateAccountNote(prof);
+      showMessage(profileMessage, "Loaded your saved profile");
+    } else {
+      updateAccountNote(null);
     }
   } catch {
     // ignore

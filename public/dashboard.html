@@ -44,7 +44,29 @@
           <div class="brand">NeoDesk</div>
         </div>
         <div class="topbar-actions">
+          <button class="nav-button icon-nav" id="nav-back" type="button" aria-label="Go back" title="Back">←</button>
+          <button class="nav-button icon-nav" id="nav-forward" type="button" aria-label="Go forward" title="Forward">→</button>
           <span class="topbar-pill">AI Study</span>
+          <div class="profile-menu" id="profile-menu">
+            <button class="profile-trigger" id="profile-trigger" type="button" aria-label="Open profile menu">
+              <span class="profile-avatar" id="profile-avatar">N</span>
+            </button>
+            <div class="profile-dropdown" id="profile-dropdown">
+              <div class="profile-summary">
+                <div class="profile-avatar large" id="profile-avatar-large">N</div>
+                <div>
+                  <div class="profile-name" id="profile-name">Student</div>
+                  <div class="profile-batch" id="profile-batch">NEO learner</div>
+                  <div class="profile-status">Online</div>
+                </div>
+              </div>
+              <a href="/profile.html" class="profile-menu-item">My Account</a>
+              <a href="#generator-page" class="profile-menu-item">AI Generator</a>
+              <a href="#practice-section" class="profile-menu-item">Practice Zone</a>
+              <a href="#topic-section" class="profile-menu-item">Recommended Topics</a>
+              <button class="profile-menu-item danger" id="profile-menu-logout" type="button">Log Out</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="breadcrumb">Home &gt; Dashboard &gt; AI Generator</div>
@@ -92,7 +114,7 @@
           </ul>
         </div>
         <div class="header-actions">
-          <button class="back-button" id="back-button" type="button">Back</button>
+          <button class="back-button" id="back-button" type="button">Edit Profile</button>
           <button class="logout-button" id="logout-button" type="button">Logout</button>
         </div>
       </header>
@@ -135,6 +157,15 @@
         </div>
         <div class="practice-grid" id="practice-grid"></div>
       </section>
+      <section class="section video-suggestions" id="video-section">
+        <div class="video-header">
+          <div>
+            <h2 id="video-title">Recommended Video Tutorials</h2>
+            <p id="video-subtitle">Videos selected from your saved study profile</p>
+          </div>
+        </div>
+        <div class="video-grid" id="video-grid"></div>
+      </section>
 
       <div class="toast" id="toast"></div>
 
@@ -149,7 +180,7 @@
           </div>
 
           <div class="ai-loading" id="ai-loading">
-            🤖 AI is generating your study material
+            ✨ AI is generating your study material
             <span class="dots"><span></span><span></span><span></span></span>
           </div>
 
@@ -203,5 +234,18 @@
     </main>
 
     <script src="dashboard.js"></script>
+
+    <footer class="dashboard-footer">
+      <div class="footer-content" >
+          <p>&copy; 2026 NeoDesk. All rights reserved.</p>
+          <div class="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Contact Support</a>
+             <p class="copyright">&copy; 2026 NeoDesk. All rights reserved.</p>
+              <h3 class="brand-title">#NeoDesk</h3>
+          </div>
+      </div>
+  </footer>
   </body>
 </html>

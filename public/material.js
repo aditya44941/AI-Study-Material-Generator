@@ -12,6 +12,7 @@ const subtitleEl = document.getElementById("material-subtitle");
 const loadingEl = document.getElementById("material-loading");
 const outputEl = document.getElementById("material-output");
 const backButton = document.getElementById("back-button");
+const forwardButton = document.getElementById("forward-button");
 const sidebarLogout = document.getElementById("sidebar-logout");
 const loadingHint = document.getElementById("loading-hint");
 const sidebarToggle = document.getElementById("sidebar-toggle");
@@ -108,6 +109,12 @@ async function loadProfile() {
 if (backButton) {
   backButton.addEventListener("click", () => {
     window.location.href = "/dashboard.html";
+  });
+}
+
+if (forwardButton) {
+  forwardButton.addEventListener("click", () => {
+    window.location.href = `/notes.html?topic=${encodeURIComponent(topic)}`;
   });
 }
 
@@ -313,25 +320,26 @@ function renderOutput(markdown) {
 }
 
 async function loadMaterial() {
-  let previewShown = false;
   const fallbackPreview = `## I. Master Notes
 ### Core Definition
-**${topic}** summary is loading. This preview highlights the key ideas.
+**${topic}** is being shown in quick mode first so you do not wait for the AI API. This preview gives the definition, importance, mechanisms, references, quiz, and next steps immediately.
 ### Historical Context/Importance
-Why ${topic} matters in modern study and applications.
+${topic} matters because it appears in exams, practical problem solving, and real systems. Learn the definition first, then understand the working process, then practice examples.
 ### Key Mechanisms
-- **Mechanism 1:** Core process
-- **Mechanism 2:** Real-world usage
-- **Mechanism 3:** Limits and constraints
+- **Core process:** The main steps that make ${topic} work.
+- **Real-world usage:** Where ${topic} is applied in school, diploma, college, or engineering problems.
+- **Limits and constraints:** Conditions where the idea may fail or need careful handling.
+- **Exam focus:** Definitions, diagrams, comparisons, applications, and common mistakes.
 
 ## II. Curated Video Library (Simulated/Searchable)
-- Crash Course ${topic}
-- MIT OpenCourseWare ${topic}
-- ${topic} for Beginners
+- YouTube search: ${topic} full course
+- YouTube search: ${topic} explained with examples
+- YouTube search: ${topic} exam revision
 
 ## III. Academic References & Reading
-- Author, A. (Year). *${topic}: A Complete Guide*. Publisher.
-- Britannica Editors. (Year). *${topic}*. Encyclopedia Britannica.
+- Wikipedia / Britannica overview for definition and history.
+- Khan Academy or NPTEL for concept explanation.
+- MIT OpenCourseWare / university notes for advanced reading.
 
 ## IV. Interactive Resource Links
 - Explore ${topic} on Wikipedia (https://www.wikipedia.org)
@@ -342,38 +350,31 @@ Why ${topic} matters in modern study and applications.
 - What are the most common mistakes in ${topic}?
 - Which real-world system uses ${topic} directly?`;
 
-  const slowTimer = setTimeout(() => {
-    previewShown = true;
-    if (loadingHint) loadingHint.textContent = "Still generating… showing quick preview.";
-    renderOutput(fallbackPreview);
-    loadingEl.classList.add("hidden");
-    outputEl.classList.remove("hidden");
-  }, 2000);
+  // Show useful content immediately. The API response upgrades it if it arrives fast.
+  if (loadingHint) loadingHint.textContent = "Quick content ready. Upgrading with AI if available.";
+  renderOutput(fallbackPreview);
+  loadingEl.classList.add("hidden");
+  outputEl.classList.remove("hidden");
+  loadFigures();
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4500);
     const res = await fetch("/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
       },
-      body: JSON.stringify({ topic })
+      body: JSON.stringify({ topic }),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
     const data = await res.json();
     const result = data.result || null;
-    clearTimeout(slowTimer);
-    renderOutput(result || fallbackPreview);
-    loadingEl.classList.add("hidden");
-    outputEl.classList.remove("hidden");
-    if (!previewShown) outputEl.scrollIntoView({ behavior: "smooth" });
-    loadFigures();
+    if (result) renderOutput(result);
   } catch (err) {
-    clearTimeout(slowTimer);
-    if (loadingHint) loadingHint.textContent = "Using quick preview. Try again later.";
-    renderOutput(fallbackPreview);
-    loadingEl.classList.add("hidden");
-    outputEl.classList.remove("hidden");
-    loadFigures();
+    // Keep the instant preview. Network/API delays should not block the page.
   }
 }
 

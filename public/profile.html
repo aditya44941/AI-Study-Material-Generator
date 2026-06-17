@@ -10,20 +10,74 @@
     <main class="page">
       <header class="hero hero-banner section">
         <div>
-          <p class="eyebrow">NEO Profile Setup</p>
-          <h1>Tell us a bit about your study path</h1>
-          <p class="subtext">This helps NeoDesk personalize your topics and AI search.</p>
+          <p class="eyebrow">NEO My Account</p>
+          <h1 id="account-title">Your profile details</h1>
+          <p class="subtext" id="account-subtitle">Review your saved study profile and update it anytime.</p>
         </div>
         <div class="header-actions">
-          <button class="back-button" id="back-button" type="button">Back</button>
+          <button class="nav-button icon-nav" id="back-button" type="button" aria-label="Go back" title="Back">←</button>
+          <button class="nav-button icon-nav" id="forward-button" type="button" aria-label="Go forward" title="Forward">→</button>
           <button class="logout-button" id="logout-button" type="button">Logout</button>
         </div>
       </header>
 
+      <section class="section account-note">
+        <div class="account-avatar" id="account-avatar">N</div>
+        <div class="account-copy">
+          <p class="eyebrow">Saved user details</p>
+          <h2 id="account-name">Student</h2>
+          <div class="account-detail-grid">
+            <div>
+              <span>Email</span>
+              <strong id="account-email">Not loaded</strong>
+            </div>
+            <div>
+              <span>College</span>
+              <strong id="account-college">Not set</strong>
+            </div>
+            <div>
+              <span>Education</span>
+              <strong id="account-level">Not set</strong>
+            </div>
+            <div>
+              <span>Branch / Stream</span>
+              <strong id="account-branch">Not set</strong>
+            </div>
+            <div>
+              <span>Study Goal</span>
+              <strong id="account-goal">Not set</strong>
+            </div>
+            <div>
+              <span>Learning Style</span>
+              <strong id="account-style">Not set</strong>
+            </div>
+            <div>
+              <span>Daily Target</span>
+              <strong id="account-target">Not set</strong>
+            </div>
+          </div>
+          <div class="account-actions">
+            <button class="account-nav primary" id="go-dashboard" type="button">Go to Dashboard</button>
+            <button class="account-nav" id="go-generator" type="button">Open AI Generator</button>
+          </div>
+        </div>
+      </section>
+
       <section class="section grid">
         <div class="card">
-          <h2>Profile details</h2>
+          <h2>Edit profile</h2>
           <form id="profile-form">
+            <div class="photo-picker">
+              <div class="photo-preview" id="photo-preview">N</div>
+              <div>
+                <label class="photo-upload">
+                  Add profile photo
+                  <input type="file" id="avatar-file" accept="image/*" />
+                </label>
+                <input type="hidden" name="avatarUrl" id="avatar-url" />
+                <button class="small-secondary" id="remove-photo" type="button">Remove photo</button>
+              </div>
+            </div>
             <label>
               Username
               <input type="text" name="username" required />
@@ -51,6 +105,36 @@
               <option value="MIT Manipal"></option>
             </datalist>
             <div id="level-specific-fields"></div>
+            <label>
+              Study goal
+              <select name="studyGoal" id="study-goal">
+                <option value="">Choose goal</option>
+                <option value="Exam preparation">Exam preparation</option>
+                <option value="Placement preparation">Placement preparation</option>
+                <option value="Daily revision">Daily revision</option>
+                <option value="Project learning">Project learning</option>
+              </select>
+            </label>
+            <label>
+              Learning style
+              <select name="learningStyle" id="learning-style">
+                <option value="">Choose style</option>
+                <option value="Visual learner">Visual learner</option>
+                <option value="Practice-first learner">Practice-first learner</option>
+                <option value="Short notes learner">Short notes learner</option>
+                <option value="Deep explanation learner">Deep explanation learner</option>
+              </select>
+            </label>
+            <label>
+              Daily study target
+              <select name="dailyTarget" id="daily-target">
+                <option value="">Choose target</option>
+                <option value="30 minutes/day">30 minutes/day</option>
+                <option value="1 hour/day">1 hour/day</option>
+                <option value="2 hours/day">2 hours/day</option>
+                <option value="Weekend focused">Weekend focused</option>
+              </select>
+            </label>
             <button type="submit">Save profile ✅</button>
             <p class="form-note" id="profile-message"></p>
           </form>
